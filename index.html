@@ -295,8 +295,9 @@ function drawMain(canvas, closes, timestamps, up) {
   if (!canvas || closes.length < 2) return;
   const ctx = canvas.getContext("2d");
   const dpr = devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  const w = rect.width, h = rect.height;
+  // getBoundingClientRect อาจ return 0 ตอน canvas ยัง hidden → ใช้ offsetWidth แทน
+  const w = canvas.offsetWidth || canvas.parentElement?.offsetWidth || 300;
+  const h = canvas.offsetHeight || canvas.parentElement?.offsetHeight || 160;
   canvas.width = w * dpr; canvas.height = h * dpr;
   ctx.scale(dpr, dpr);
 
@@ -414,18 +415,42 @@ function renderList(priceMap) {
 ══════════════════════════════════════════ */
 let priceCache = {};
 
+async function getCloses1D(sym) {
+  // ดึง 1D ก่อน ถ้าได้น้อยให้ fallback 5d แล้วตัดวันล่าสุด
+  let d = await fetchYahoo(sym, "1d", "5m").catch(() => null);
+  let closes = [];
+  let prev = null;
+  if (d?.chart?.result?.[0]) {
+    const r = d.chart.result[0];
+    closes = (r.indicators.quote[0].close || []).filter(v => v !== null);
+    prev   = r.meta.previousClose;
+  }
+  if (closes.length < 10) {
+    const d5 = await fetchYahoo(sym, "5d", "5m").catch(() => null);
+    if (d5?.chart?.result?.[0]) {
+      const r5  = d5.chart.result[0];
+      const ts5 = r5.timestamp || [];
+      const cl5 = r5.indicators.quote[0].close || [];
+      const pairs = ts5.map((t,i) => ({ t, c: cl5[i] }))
+                       .filter(p => p.c !== null && p.c !== undefined);
+      if (pairs.length >= 5) {
+        const lastDate = new Date(pairs.at(-1).t * 1000).toDateString();
+        const day = pairs.filter(p => new Date(p.t*1000).toDateString() === lastDate);
+        closes = (day.length >= 5 ? day : pairs.slice(-80)).map(p => p.c);
+        if (!prev) prev = r5.chart?.result?.[0]?.meta?.previousClose;
+      }
+    }
+  }
+  return { closes, prev: prev || closes[0] };
+}
+
 async function loadListPrices() {
   renderList(priceCache);
-  const results = await Promise.all(
-    stocks.map(s => fetchYahoo(s.sym, "1d", "5m").catch(() => null))
-  );
-  results.forEach((d, i) => {
-    if (!d?.chart?.result?.[0]) return;
-    const r = d.chart.result[0];
-    const closes = (r.indicators.quote[0].close || []).filter(v => v !== null);
-    if (!closes.length) return;
+  const results = await Promise.all(stocks.map(s => getCloses1D(s.sym).catch(() => null)));
+  results.forEach((res, i) => {
+    if (!res?.closes?.length) return;
+    const { closes, prev } = res;
     const now  = closes.at(-1);
-    const prev = r.meta.previousClose || closes[0];
     const chg  = now - prev;
     const pct  = (chg / prev) * 100;
     priceCache[stocks[i].sym] = { now, prev, chg, pct, up: chg >= 0, closes };
@@ -474,14 +499,53 @@ function closeDetail() {
 async function loadDetail(sym, range, interval) {
   document.getElementById("chartLoading").style.display = "flex";
   try {
-    const d = await fetchYahoo(sym, range, interval);
+    let d = await fetchYahoo(sym, range, interval);
     if (currentSym !== sym) return;
-    const r      = d.chart.result[0];
-    const meta   = r.meta;
-    const q      = r.indicators.quote[0];
-    const ts     = r.timestamp || [];
-    const closes = (q.close || []).filter(v => v !== null);
-    const vols   = (q.volume || []).filter(v => v !== null);
+    let r    = d.chart.result[0];
+    let meta = r.meta;
+    let q    = r.indicators.quote[0];
+    let rawTs     = r.timestamp || [];
+    let rawClose  = q.close  || [];
+    let rawVol    = q.volume || [];
+
+    // กรอง null พร้อมกันทุก array ให้ index ตรงกัน
+    const pairs = rawTs.map((t, i) => ({ t, c: rawClose[i], v: rawVol[i] }))
+                       .filter(p => p.c !== null && p.c !== undefined);
+
+    // ถ้า 1D แต่ได้ข้อมูลน้อยกว่า 10 จุด (ตลาดปิด/pre-market)
+    // → ดึง 5d interval 5m แล้วตัดแค่วันล่าสุด
+    if (range === "1d" && pairs.length < 10) {
+      const d5 = await fetchYahoo(sym, "5d", "5m").catch(() => null);
+      if (d5?.chart?.result?.[0]) {
+        const r5   = d5.chart.result[0];
+        const q5   = r5.indicators.quote[0];
+        const ts5  = r5.timestamp || [];
+        const cl5  = q5.close  || [];
+        const vl5  = q5.volume || [];
+        const allPairs = ts5.map((t,i) => ({ t, c: cl5[i], v: vl5[i] }))
+                            .filter(p => p.c !== null && p.c !== undefined);
+        if (allPairs.length >= 10) {
+          // หาวันล่าสุดที่มีข้อมูล
+          const lastTs   = allPairs.at(-1).t;
+          const lastDate = new Date(lastTs * 1000).toDateString();
+          const dayPairs = allPairs.filter(p =>
+            new Date(p.t * 1000).toDateString() === lastDate
+          );
+          if (dayPairs.length >= 5) {
+            pairs.length = 0;
+            pairs.push(...dayPairs);
+          } else {
+            // fallback ใช้ 80 จุดล่าสุด
+            pairs.length = 0;
+            pairs.push(...allPairs.slice(-80));
+          }
+        }
+      }
+    }
+
+    const ts     = pairs.map(p => p.t);
+    const closes = pairs.map(p => p.c);
+    const vols   = pairs.map(p => p.v).filter(v => v !== null && v !== undefined);
     if (!closes.length) return;
 
     const now  = closes.at(-1);
