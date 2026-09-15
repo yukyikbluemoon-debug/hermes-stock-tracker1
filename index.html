@@ -17,7 +17,8 @@
   .green { color:#00e676; }
   .red { color:#ff5252; }
   .baht { font-size:11px; color:#7d8590; margin-top:4px; }
-  .loading { color:#7d8590; }
+  .chart-wrap { margin-top:12px; height:120px; position:relative; }
+  .chart-wrap canvas { width:100%; height:100%; }
 </style>
 </head>
 <body>
@@ -26,27 +27,58 @@
 
 <script>
 const COINS = [
-  { sym:"VOO", name:"S&P 500 ETF" },
-  { sym:"NVDA", name:"NVIDIA Corp" },
-  { sym:"JEPQ", name:"JEPQ ETF" }
+  { sym:"VOO", name:"S&P 500 ETF", baht:32.67 },
+  { sym:"NVDA", name:"NVIDIA Corp", baht:32.67 },
+  { sym:"JEPQ", name:"JEPQ ETF", baht:32.67 }
 ];
 
 const URLS = COINS.map(c => `https://query1.finance.yahoo.com/v8/finance/chart/${c.sym}?range=1d&interval=2m`);
 
+function drawChart(canvas, closes, up) {
+  if (!canvas || closes.length < 2) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.scale(dpr, dpr);
+  const min = Math.min(...closes);
+  const max = Math.max(...closes);
+  const range = max - min || 1;
+  const pad = 4;
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  if (up) { grad.addColorStop(0,'rgba(0,230,118,0.3)'); grad.addColorStop(1,'rgba(0,230,118,0)'); }
+  else { grad.addColorStop(0,'rgba(255,82,82,0.3)'); grad.addColorStop(1,'rgba(255,82,82,0)'); }
+  ctx.beginPath(); ctx.moveTo(0, h);
+  closes.forEach((v, i) => {
+    const x = (i / (closes.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h - pad * 2) - pad;
+    ctx.lineTo(x, y);
+  });
+  ctx.lineTo(w, h); ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+  ctx.beginPath();
+  closes.forEach((v, i) => {
+    const x = (i / (closes.length - 1)) * w;
+    const y = h - ((v - min) / range) * (h - pad * 2) - pad;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = up ? '#00e676' : '#ff5252';
+  ctx.lineWidth = 2; ctx.stroke();
+}
+
 async function load() {
   const list = document.getElementById('list');
-
-  // Show loading cards immediately
-  list.innerHTML = COINS.map(c => `<div class="card">
+  list.innerHTML = COINS.map(c => `<div class="card" id="c-${c.sym}">
     <div class="sym">${c.sym}</div><div class="name">${c.name}</div>
-    <div class="price loading">Loading...</div></div>`).join('');
+    <div class="price">–</div><div class="change">–</div><div class="baht"></div>
+    <div class="chart-wrap"><canvas></canvas></div></div>`).join('');
 
   try {
-    const responses = await Promise.all(URLS.map(u => fetch(u, { headers: { "User-Agent": "Mozilla/5.0" } })));
-    const data = await Promise.all(responses.map(r => r.json()));
-
+    const resps = await Promise.all(URLS.map(u => fetch(u, { headers: { "User-Agent": "Mozilla/5.0" } })));
+    const datas = await Promise.all(resps.map(r => r.json()));
     let html = '';
-    data.forEach((d, i) => {
+    datas.forEach((d, i) => {
       const c = COINS[i];
       const r = d.chart.result[0];
       const meta = r.meta;
@@ -59,17 +91,28 @@ async function load() {
       const up = chg >= 0;
       const cls = up ? 'green' : 'red';
       const sign = up ? '+' : '';
-
       html += `<div class="card">
         <div class="sym">${c.sym}</div><div class="name">${c.name}</div>
         <div class="price">${now.toFixed(2)}</div>
         <div class="change ${cls}">${sign}${chg.toFixed(2)} (${sign}${pct.toFixed(2)}%)</div>
-        <div class="baht">≈ ${(now * 32.67).toFixed(0)} บาท</div>
+        <div class="baht">≈ ${(now * c.baht).toFixed(0)} บาท</div>
+        <div class="chart-wrap"><canvas id="cv-${c.sym}"></canvas></div>
       </div>`;
     });
     list.innerHTML = html;
+    // Draw charts after DOM update
+    datas.forEach((d, i) => {
+      const c = COINS[i];
+      const quotes = d.chart.result[0].indicators.quote[0];
+      const closes = quotes.close.filter(v => v !== null);
+      const now = closes[closes.length - 1];
+      const prev = d.chart.result[0].meta.previousClose;
+      const up = (now - prev) >= 0;
+      const cv = document.getElementById(`cv-${c.sym}`);
+      if (cv) drawChart(cv, closes, up);
+    });
   } catch(e) {
-    list.innerHTML = '<div style="text-align:center;color:#ff5252;padding:40px">ไม่สามารถโหลดข้อมูลได้<br>ลองใหม่อีกครั้ง</div>';
+    list.innerHTML = '<div style="text-align:center;color:#ff5252;padding:40px">ไม่สามารถโหลดข้อมูลได้</div>';
   }
 }
 
