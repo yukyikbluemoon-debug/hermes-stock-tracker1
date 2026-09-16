@@ -16,31 +16,25 @@
   --green:   #00d97e;
   --red:     #ff4d6a;
   --blue:    #3b9eff;
-  --yellow:  #f5c842;
   --radius:  18px;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body { height:100%; overflow:hidden; }
 body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); }
 
-/* ── SCREENS ── */
 .screen { position:fixed; inset:0; display:flex; flex-direction:column; transition:transform .35s cubic-bezier(.4,0,.2,1), opacity .35s; will-change:transform; overflow:hidden; }
 .screen.hidden { pointer-events:none; }
-#screen-list.hidden  { transform:translateX(-100%); opacity:0; }
-#screen-detail.hidden{ transform:translateX(100%);  opacity:0; }
+#screen-list.hidden   { transform:translateX(-100%); opacity:0; }
+#screen-detail.hidden { transform:translateX(100%);  opacity:0; }
 
-/* ── TOP BAR ── */
 .topbar { display:flex; align-items:center; padding:16px 20px 12px; gap:12px; flex-shrink:0; background:var(--bg); }
 .topbar-title { font-size:18px; font-weight:700; flex:1; }
-.icon-btn { background:var(--card); border:1px solid var(--border); color:var(--sub); border-radius:12px; width:38px; height:38px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; transition:color .2s; }
+.icon-btn { background:var(--card); border:1px solid var(--border); color:var(--sub); border-radius:12px; width:38px; height:38px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; }
 .icon-btn:active { opacity:.7; }
-.back-btn { font-size:22px; }
 
-/* ── LIST SCROLL ── */
 .list-scroll { flex:1; overflow-y:auto; padding:0 16px 100px; }
 .list-scroll::-webkit-scrollbar { display:none; }
 
-/* ── STOCK CARD (list) ── */
 .stock-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color .2s, transform .1s; position:relative; }
 .stock-card:active { transform:scale(.985); border-color:var(--blue); }
 .card-left { flex:1; min-width:0; }
@@ -55,7 +49,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .edit-mode .del-btn { display:flex; }
 .edit-mode .stock-card { border-color:#2a3a4a; }
 
-/* ── ADD SHEET ── */
 .add-sheet-bg { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:flex; align-items:flex-end; transition:opacity .25s; }
 .add-sheet-bg.hidden { opacity:0; pointer-events:none; }
 .add-sheet { background:var(--surface); border-radius:24px 24px 0 0; padding:24px 20px 48px; width:100%; }
@@ -63,11 +56,11 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .sym-input { width:100%; background:var(--card); border:1.5px solid var(--border); border-radius:14px; color:var(--text); font-size:16px; padding:14px 16px; outline:none; margin-bottom:12px; transition:border-color .2s; }
 .sym-input:focus { border-color:var(--blue); }
 .sym-input::placeholder { color:var(--sub); }
-.add-btn-main { width:100%; background:var(--blue); color:#fff; border:none; border-radius:14px; padding:15px; font-size:15px; font-weight:600; cursor:pointer; transition:opacity .2s; }
+.add-btn-main { width:100%; background:var(--blue); color:#fff; border:none; border-radius:14px; padding:15px; font-size:15px; font-weight:600; cursor:pointer; }
 .add-btn-main:active { opacity:.8; }
 .add-hint { font-size:11px; color:var(--sub); text-align:center; margin-top:10px; }
+.error-tag { color:var(--red); font-size:12px; padding:4px 0; }
 
-/* ── DETAIL TOP ── */
 .detail-top { padding:12px 20px 0; flex-shrink:0; }
 .detail-sym { font-size:28px; font-weight:800; line-height:1; }
 .detail-name { font-size:13px; color:var(--sub); margin-top:4px; }
@@ -77,54 +70,46 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .detail-baht { font-size:13px; color:var(--sub); margin-top:6px; }
 .detail-status { display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--sub); margin-top:6px; padding:4px 10px; background:var(--card); border-radius:20px; border:1px solid var(--border); }
 .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-.dot.open { background:var(--green); box-shadow:0 0 6px var(--green); }
+.dot.open   { background:var(--green); box-shadow:0 0 6px var(--green); }
 .dot.closed { background:var(--sub); }
 
-/* ── RANGE BAR ── */
 .range-wrap { padding:0 20px; margin-top:16px; flex-shrink:0; }
 .range-bar { height:3px; background:var(--border); border-radius:3px; position:relative; margin:6px 0 4px; }
 .range-fill { height:100%; border-radius:3px; position:absolute; left:0; }
 .range-dot-el { position:absolute; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; border-radius:50%; border:2px solid var(--bg); }
 .range-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--sub); }
 
-/* ── CHART ── */
 .chart-area { flex:1; padding:8px 0 0; position:relative; min-height:0; }
 .chart-area canvas { position:absolute; inset:0; width:100%; height:100%; }
 .chart-loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--sub); font-size:13px; }
 
-/* ── TIME TABS ── */
 .time-tabs { display:flex; padding:10px 20px; gap:6px; flex-shrink:0; background:var(--bg); }
 .tab { flex:1; background:var(--card); border:1px solid var(--border); color:var(--sub); border-radius:10px; padding:8px 0; font-size:13px; font-weight:600; cursor:pointer; text-align:center; transition:background .15s, color .15s; }
 .tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
 
-/* ── STAT GRID ── */
 .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:12px 20px 24px; flex-shrink:0; }
 .stat-box { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; }
 .stat-label { font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:.5px; }
 .stat-val { font-size:16px; font-weight:700; margin-top:4px; }
 
-/* ── EMPTY / ERROR ── */
 .empty-state { text-align:center; padding:60px 20px; color:var(--sub); }
 .empty-state .ico { font-size:48px; margin-bottom:14px; }
 .empty-state p { font-size:14px; line-height:1.7; }
-.error-tag { color:var(--red); font-size:12px; padding:4px 0; }
 
-/* ── LOADING SKELETON ── */
 .skel { background:var(--border); border-radius:6px; animation:shimmer 1.4s infinite; }
 @keyframes shimmer { 0%,100%{opacity:.5} 50%{opacity:1} }
 
-/* ── FAB ── */
 .fab { position:fixed; bottom:28px; right:20px; width:56px; height:56px; border-radius:50%; background:var(--blue); color:#fff; font-size:26px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(59,158,255,.45); transition:transform .15s; z-index:10; }
 .fab:active { transform:scale(.92); }
 </style>
 </head>
 <body>
 
-<!-- ══════ SCREEN: LIST ══════ -->
+<!-- LIST SCREEN -->
 <div class="screen" id="screen-list">
   <div class="topbar">
     <div class="topbar-title">📈 Hermes</div>
-    <div class="icon-btn" id="editBtn" title="แก้ไข">✏️</div>
+    <div class="icon-btn" id="editBtn">✏️</div>
   </div>
   <div class="list-scroll" id="stockList">
     <div class="empty-state"><div class="ico">📉</div><p>กำลังโหลด…</p></div>
@@ -132,10 +117,10 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
   <button class="fab" id="addFab">+</button>
 </div>
 
-<!-- ══════ SCREEN: DETAIL ══════ -->
+<!-- DETAIL SCREEN -->
 <div class="screen hidden" id="screen-detail">
   <div class="topbar">
-    <div class="icon-btn back-btn" id="backBtn">←</div>
+    <div class="icon-btn" id="backBtn" style="font-size:22px">←</div>
     <div class="topbar-title" id="det-topbar-sym"></div>
     <div style="width:38px"></div>
   </div>
@@ -147,14 +132,16 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
       <div class="detail-chg" id="det-chg"></div>
     </div>
     <div class="detail-baht" id="det-baht"></div>
-    <div class="detail-status" id="det-status">
+    <div class="detail-status">
       <span class="dot closed" id="det-dot"></span>
       <span id="det-status-txt">–</span>
     </div>
   </div>
   <div class="range-wrap" id="det-range-wrap" style="display:none">
     <div class="range-labels">
-      <span id="rng-lo"></span><span style="color:var(--sub);font-size:10px">ช่วงวันนี้</span><span id="rng-hi"></span>
+      <span id="rng-lo"></span>
+      <span style="color:var(--sub);font-size:10px">ช่วงวันนี้</span>
+      <span id="rng-hi"></span>
     </div>
     <div class="range-bar">
       <div class="range-fill" id="rng-fill"></div>
@@ -162,11 +149,11 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
     </div>
   </div>
   <div class="time-tabs" id="timeTabs">
-    <div class="tab active" data-r="1d" data-i="2m">1D</div>
-    <div class="tab" data-r="5d" data-i="15m">5D</div>
-    <div class="tab" data-r="1mo" data-i="1d">1M</div>
-    <div class="tab" data-r="6mo" data-i="1wk">6M</div>
-    <div class="tab" data-r="1y" data-i="1wk">1Y</div>
+    <div class="tab active" data-tf="1D">1D</div>
+    <div class="tab" data-tf="5D">5D</div>
+    <div class="tab" data-tf="1M">1M</div>
+    <div class="tab" data-tf="6M">6M</div>
+    <div class="tab" data-tf="1Y">1Y</div>
   </div>
   <div class="chart-area" id="chartArea">
     <canvas id="mainCanvas"></canvas>
@@ -175,100 +162,123 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
   <div class="stat-grid" id="statGrid"></div>
 </div>
 
-<!-- ══════ ADD SHEET ══════ -->
+<!-- ADD SHEET -->
 <div class="add-sheet-bg hidden" id="addSheet">
   <div class="add-sheet">
     <h3>เพิ่มหุ้น / ETF</h3>
-    <input class="sym-input" id="symInput" placeholder="เช่น AAPL, QQQ, BTC-USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
+    <input class="sym-input" id="symInput" placeholder="เช่น AAPL, QQQ, MSFT" autocapitalize="characters" autocomplete="off" spellcheck="false">
     <div class="error-tag" id="addError"></div>
     <button class="add-btn-main" id="confirmAdd">เพิ่ม</button>
-    <div class="add-hint">ใช้ symbol เดียวกับ Yahoo Finance</div>
+    <div class="add-hint">ใช้ symbol เดียวกับ Yahoo Finance / Twelve Data</div>
   </div>
 </div>
 
 <script>
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    CONFIG
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
+const TD_KEY = "457c304f76fe4a0f9280acab2b066165";
+const TD_BASE = "https://api.twelvedata.com";
+
 const DEFAULT_SYMS = [
   { sym:"VOO",  name:"Vanguard S&P 500 ETF" },
   { sym:"NVDA", name:"NVIDIA Corp" },
   { sym:"JEPQ", name:"JPMorgan Nasdaq Equity ETF" }
 ];
 
-const PROXIES = [
-  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => u
-];
+// Twelve Data timeframe map → { interval, outputsize }
+const TF_MAP = {
+  "1D": { interval:"5min",  outputsize:78  },
+  "5D": { interval:"15min", outputsize:130 },
+  "1M": { interval:"1h",    outputsize:160 },
+  "6M": { interval:"1day",  outputsize:130 },
+  "1Y": { interval:"1week", outputsize:52  }
+};
 
-const YAHOO = (sym, range, interval) =>
-  `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?range=${range}&interval=${interval}`;
-
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    STATE
-══════════════════════════════════════════ */
-let stocks   = [];   // [{sym,name}]
-let editMode = false;
-let usdThb   = 33;
-let db       = null;
+═══════════════════════════════════════ */
+let stocks     = [];
+let editMode   = false;
+let usdThb     = 33;
+let db         = null;
 let currentSym = null;
-let currentRange = { r:"1d", i:"2m" };
-let chartUnsub = null;
+let currentTf  = "1D";
 let detailTimer = null;
 
-/* ══════════════════════════════════════════
-   DB / PERSIST
-══════════════════════════════════════════ */
+// cache: sym → { ts, data }  (TTL 55s)
+const cache = {};
+function getCache(key) {
+  const c = cache[key];
+  if (!c) return null;
+  if (Date.now() - c.ts > 55000) return null;
+  return c.data;
+}
+function setCache(key, data) { cache[key] = { ts: Date.now(), data }; }
+
+/* ═══════════════════════════════════════
+   DB
+═══════════════════════════════════════ */
 async function initDb() {
   try { db = await claude.use("db"); } catch { db = null; }
   if (!db) return;
   const snap = await db.doc("data/stocks").get();
   if (snap.exists) {
     const d = snap.data();
-    if (Array.isArray(d.list) && d.list.length > 0) {
-      stocks = d.list;
-      return;
-    }
+    if (Array.isArray(d.list) && d.list.length > 0) { stocks = d.list; return; }
   }
-  // seed defaults
   stocks = [...DEFAULT_SYMS];
   await db.doc("data/stocks").set({ list: stocks });
 }
-
 async function saveStocks() {
-  if (db) {
-    try { await db.doc("data/stocks").set({ list: stocks }); } catch {}
-  }
+  if (db) try { await db.doc("data/stocks").set({ list: stocks }); } catch {}
 }
 
-/* ══════════════════════════════════════════
-   FETCH
-══════════════════════════════════════════ */
-async function fetchYahoo(sym, range, interval) {
-  const raw = YAHOO(sym, range, interval);
-  for (const make of PROXIES) {
-    try {
-      const r = await fetch(make(raw), { signal: AbortSignal.timeout(9000), headers:{ Accept:"application/json" } });
-      if (!r.ok) continue;
-      const j = await r.json();
-      if (j?.chart?.result?.[0]) return j;
-    } catch {}
-  }
-  throw new Error("โหลดไม่ได้");
+/* ═══════════════════════════════════════
+   TWELVE DATA FETCH
+═══════════════════════════════════════ */
+// ดึงราคา + เปลี่ยนแปลงวันเดียว (quote endpoint — เร็วมาก 1 call)
+async function tdQuote(sym) {
+  const key = `q_${sym}`;
+  const hit = getCache(key);
+  if (hit) return hit;
+  const url = `${TD_BASE}/quote?symbol=${sym}&apikey=${TD_KEY}`;
+  const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
+  const d = await r.json();
+  if (d.status === "error" || !d.close) throw new Error(d.message || "ไม่พบ");
+  setCache(key, d);
+  return d;
 }
 
+// ดึง time series สำหรับกราฟ
+async function tdSeries(sym, tf) {
+  const { interval, outputsize } = TF_MAP[tf];
+  const key = `ts_${sym}_${tf}`;
+  const hit = getCache(key);
+  if (hit) return hit;
+  const url = `${TD_BASE}/time_series?symbol=${sym}&interval=${interval}&outputsize=${outputsize}&apikey=${TD_KEY}`;
+  const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+  const d = await r.json();
+  if (d.status === "error" || !d.values) throw new Error(d.message || "ไม่พบข้อมูลกราฟ");
+  // values เรียงใหม่สุดก่อน → กลับให้เก่าก่อน
+  d.values = d.values.slice().reverse();
+  setCache(key, d);
+  return d;
+}
+
+// อัตราแลกเปลี่ยน
 async function getRate() {
   try {
-    const r = await fetch("https://api.exchangerate-api.com/v4/latest/USD", { signal: AbortSignal.timeout(5000) });
+    const r = await fetch("https://api.exchangerate-api.com/v4/latest/USD",
+      { signal: AbortSignal.timeout(5000) });
     const d = await r.json();
     usdThb = d.rates?.THB || 33;
   } catch { usdThb = 33; }
 }
 
-/* ══════════════════════════════════════════
-   MINI CHART (list cards)
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   CHARTS
+═══════════════════════════════════════ */
 function drawMini(canvas, closes, up) {
   if (!canvas || closes.length < 2) return;
   const ctx = canvas.getContext("2d");
@@ -278,193 +288,144 @@ function drawMini(canvas, closes, up) {
   ctx.scale(dpr, dpr);
   const mn = Math.min(...closes), mx = Math.max(...closes);
   const rng = mx - mn || 1;
-  const color = up ? "#00d97e" : "#ff4d6a";
   ctx.beginPath();
   closes.forEach((v, i) => {
     const x = (i / (closes.length - 1)) * w;
     const y = h - ((v - mn) / rng) * (h - 4) - 2;
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
-  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.lineJoin = "round"; ctx.stroke();
+  ctx.strokeStyle = up ? "#00d97e" : "#ff4d6a";
+  ctx.lineWidth = 1.5; ctx.lineJoin = "round"; ctx.stroke();
 }
 
-/* ══════════════════════════════════════════
-   MAIN CHART (detail)
-══════════════════════════════════════════ */
-function drawMain(canvas, closes, timestamps, up) {
+function drawMain(canvas, closes, labels, up) {
   if (!canvas || closes.length < 2) return;
   const ctx = canvas.getContext("2d");
   const dpr = devicePixelRatio || 1;
-  // getBoundingClientRect อาจ return 0 ตอน canvas ยัง hidden → ใช้ offsetWidth แทน
-  const w = canvas.offsetWidth || canvas.parentElement?.offsetWidth || 300;
+  const w = canvas.offsetWidth  || canvas.parentElement?.offsetWidth  || 320;
   const h = canvas.offsetHeight || canvas.parentElement?.offsetHeight || 160;
   canvas.width = w * dpr; canvas.height = h * dpr;
   ctx.scale(dpr, dpr);
 
-  const padT = 12, padB = 36, padL = 12, padR = 12;
-  const cw = w - padL - padR, ch = h - padT - padB;
+  const padT=12, padB=36, padL=12, padR=12;
+  const cw = w-padL-padR, ch = h-padT-padB;
   const mn = Math.min(...closes), mx = Math.max(...closes);
   const rng = mx - mn || 1;
   const color = up ? "#00d97e" : "#ff4d6a";
+  const px = i => padL + (i/(closes.length-1))*cw;
+  const py = v => padT + ch - ((v-mn)/rng)*ch;
 
-  const px = i => padL + (i / (closes.length - 1)) * cw;
-  const py = v => padT + ch - ((v - mn) / rng) * ch;
-
-  // grid lines
-  ctx.strokeStyle = "rgba(255,255,255,0.04)";
-  ctx.lineWidth = 1;
-  for (let k = 0; k <= 4; k++) {
-    const y = padT + (k / 4) * ch;
-    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + cw, y); ctx.stroke();
+  // grid
+  ctx.strokeStyle = "rgba(255,255,255,0.04)"; ctx.lineWidth = 1;
+  for (let k=0; k<=4; k++) {
+    const y = padT+(k/4)*ch;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+cw,y); ctx.stroke();
   }
 
   // fill
-  const grad = ctx.createLinearGradient(0, padT, 0, padT + ch);
-  grad.addColorStop(0, up ? "rgba(0,217,126,.28)" : "rgba(255,77,106,.28)");
-  grad.addColorStop(1, "rgba(0,0,0,0)");
+  const grad = ctx.createLinearGradient(0,padT,0,padT+ch);
+  grad.addColorStop(0, up?"rgba(0,217,126,.25)":"rgba(255,77,106,.25)");
+  grad.addColorStop(1,"rgba(0,0,0,0)");
   ctx.beginPath();
-  ctx.moveTo(px(0), padT + ch);
-  closes.forEach((v, i) => ctx.lineTo(px(i), py(v)));
-  ctx.lineTo(px(closes.length - 1), padT + ch);
-  ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+  ctx.moveTo(px(0), padT+ch);
+  closes.forEach((v,i) => ctx.lineTo(px(i), py(v)));
+  ctx.lineTo(px(closes.length-1), padT+ch);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
 
   // line
   ctx.beginPath();
-  closes.forEach((v, i) => i === 0 ? ctx.moveTo(px(i), py(v)) : ctx.lineTo(px(i), py(v)));
-  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.stroke();
+  closes.forEach((v,i) => i===0 ? ctx.moveTo(px(i),py(v)) : ctx.lineTo(px(i),py(v)));
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin="round"; ctx.stroke();
 
   // time labels
-  if (timestamps?.length) {
-    ctx.fillStyle = "rgba(107,127,147,.8)";
-    ctx.font = `${10 * dpr / dpr}px -apple-system,sans-serif`;
-    ctx.textAlign = "center";
-    const steps = Math.min(4, closes.length - 1);
-    for (let k = 0; k <= steps; k++) {
-      const idx = Math.round((k / steps) * (closes.length - 1));
-      const ts = timestamps[idx];
-      if (!ts) continue;
-      const d = new Date(ts * 1000);
-      const label = closes.length > 100
-        ? d.toLocaleDateString("th-TH", { month:"short", day:"numeric" })
-        : d.toLocaleTimeString("th-TH", { hour:"2-digit", minute:"2-digit" });
-      ctx.fillText(label, px(idx), padT + ch + 22);
+  if (labels?.length) {
+    ctx.fillStyle="rgba(107,127,147,.8)";
+    ctx.font=`10px -apple-system,sans-serif`;
+    ctx.textAlign="center";
+    const steps = Math.min(4, closes.length-1);
+    for (let k=0; k<=steps; k++) {
+      const idx = Math.round((k/steps)*(closes.length-1));
+      if (labels[idx]) ctx.fillText(labels[idx], px(idx), padT+ch+22);
     }
   }
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    LIST RENDER
-══════════════════════════════════════════ */
-function renderList(priceMap) {
+═══════════════════════════════════════ */
+const priceCache = {};
+
+function renderList() {
   const el = document.getElementById("stockList");
   if (!stocks.length) {
     el.innerHTML = `<div class="empty-state"><div class="ico">📋</div><p>ยังไม่มีหุ้น<br>กด + เพิ่มได้เลย</p></div>`;
     return;
   }
-
   el.innerHTML = stocks.map(s => {
-    const p = priceMap[s.sym];
+    const p = priceCache[s.sym];
     const priceHtml = p
-      ? `<div class="card-price">${p.now.toFixed(2)}</div>
-         <div class="card-chg ${p.up ? 'green' : 'red'}">${p.up ? "+" : ""}${p.pct.toFixed(2)}%</div>`
+      ? `<div class="card-price">${parseFloat(p.now).toFixed(2)}</div>
+         <div class="card-chg ${p.up?'green':'red'}">${p.up?"+":""}${p.pct.toFixed(2)}%</div>`
       : `<div class="card-price skel" style="width:70px;height:18px;margin-bottom:6px"></div>
          <div class="skel" style="width:50px;height:12px"></div>`;
-    return `
-    <div class="stock-card" id="row-${s.sym}" data-sym="${s.sym}">
+    return `<div class="stock-card" data-sym="${s.sym}">
       <div class="card-left">
         <div class="card-sym">${s.sym}</div>
         <div class="card-name">${s.name}</div>
       </div>
-      <div class="card-mid">
-        <canvas class="card-mini-chart" id="mini-${s.sym}"></canvas>
-      </div>
+      <div class="card-mid"><canvas class="card-mini-chart" id="mini-${s.sym}"></canvas></div>
       <div class="card-right">${priceHtml}</div>
       <button class="del-btn" data-sym="${s.sym}">×</button>
     </div>`;
   }).join("");
 
-  // events
-  el.querySelectorAll(".stock-card").forEach(card => {
-    card.addEventListener("click", e => {
-      if (editMode) return;
-      openDetail(card.dataset.sym);
-    });
+  el.querySelectorAll(".stock-card").forEach(c => {
+    c.addEventListener("click", e => { if (!editMode) openDetail(c.dataset.sym); });
   });
-  el.querySelectorAll(".del-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-      removeSym(btn.dataset.sym);
-    });
+  el.querySelectorAll(".del-btn").forEach(b => {
+    b.addEventListener("click", e => { e.stopPropagation(); removeSym(b.dataset.sym); });
   });
 
   // draw mini charts
-  if (priceMap) {
-    Object.entries(priceMap).forEach(([sym, p]) => {
-      if (!p?.closes) return;
-      const cv = document.getElementById(`mini-${sym}`);
-      if (cv) requestAnimationFrame(() => drawMini(cv, p.closes, p.up));
-    });
-  }
-
-  if (editMode) el.classList.add("edit-mode");
-  else el.classList.remove("edit-mode");
-}
-
-/* ══════════════════════════════════════════
-   LOAD LIST PRICES
-══════════════════════════════════════════ */
-let priceCache = {};
-
-async function getCloses1D(sym) {
-  // ดึง 1D ก่อน ถ้าได้น้อยให้ fallback 5d แล้วตัดวันล่าสุด
-  let d = await fetchYahoo(sym, "1d", "5m").catch(() => null);
-  let closes = [];
-  let prev = null;
-  if (d?.chart?.result?.[0]) {
-    const r = d.chart.result[0];
-    closes = (r.indicators.quote[0].close || []).filter(v => v !== null);
-    prev   = r.meta.previousClose;
-  }
-  if (closes.length < 10) {
-    const d5 = await fetchYahoo(sym, "5d", "5m").catch(() => null);
-    if (d5?.chart?.result?.[0]) {
-      const r5  = d5.chart.result[0];
-      const ts5 = r5.timestamp || [];
-      const cl5 = r5.indicators.quote[0].close || [];
-      const pairs = ts5.map((t,i) => ({ t, c: cl5[i] }))
-                       .filter(p => p.c !== null && p.c !== undefined);
-      if (pairs.length >= 5) {
-        const lastDate = new Date(pairs.at(-1).t * 1000).toDateString();
-        const day = pairs.filter(p => new Date(p.t*1000).toDateString() === lastDate);
-        closes = (day.length >= 5 ? day : pairs.slice(-80)).map(p => p.c);
-        if (!prev) prev = r5.chart?.result?.[0]?.meta?.previousClose;
-      }
-    }
-  }
-  return { closes, prev: prev || closes[0] };
-}
-
-async function loadListPrices() {
-  renderList(priceCache);
-  const results = await Promise.all(stocks.map(s => getCloses1D(s.sym).catch(() => null)));
-  results.forEach((res, i) => {
-    if (!res?.closes?.length) return;
-    const { closes, prev } = res;
-    const now  = closes.at(-1);
-    const chg  = now - prev;
-    const pct  = (chg / prev) * 100;
-    priceCache[stocks[i].sym] = { now, prev, chg, pct, up: chg >= 0, closes };
+  Object.entries(priceCache).forEach(([sym, p]) => {
+    if (!p?.closes?.length) return;
+    const cv = document.getElementById(`mini-${sym}`);
+    if (cv) requestAnimationFrame(() => drawMini(cv, p.closes, p.up));
   });
-  renderList(priceCache);
+
+  el.classList.toggle("edit-mode", editMode);
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
+   LOAD LIST
+═══════════════════════════════════════ */
+async function loadListPrices() {
+  renderList();
+  // โหลดทุกหุ้นพร้อมกัน (parallel) ด้วย quote + time_series 1D
+  await Promise.all(stocks.map(async s => {
+    try {
+      const [q, ts] = await Promise.all([
+        tdQuote(s.sym),
+        tdSeries(s.sym, "1D")
+      ]);
+      const now  = parseFloat(q.close);
+      const prev = parseFloat(q.previous_close);
+      const chg  = now - prev;
+      const pct  = (chg/prev)*100;
+      const closes = ts.values.map(v => parseFloat(v.close));
+      priceCache[s.sym] = { now, prev, chg, pct, up: chg>=0, closes };
+    } catch { /* ข้ามถ้า error */ }
+  }));
+  renderList();
+}
+
+/* ═══════════════════════════════════════
    DETAIL
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function openDetail(sym) {
   const s = stocks.find(x => x.sym === sym);
   currentSym = sym;
-  currentRange = { r:"1d", i:"2m" };
+  currentTf  = "1D";
 
   document.getElementById("det-topbar-sym").textContent = sym;
   document.getElementById("det-sym").textContent = sym;
@@ -475,17 +436,17 @@ function openDetail(sym) {
   document.getElementById("det-range-wrap").style.display = "none";
   document.getElementById("statGrid").innerHTML = "";
   document.getElementById("chartLoading").style.display = "flex";
+  document.getElementById("chartLoading").textContent = "กำลังโหลดกราฟ…";
 
-  // reset tabs
-  document.querySelectorAll(".tab").forEach(t => {
-    t.classList.toggle("active", t.dataset.r === "1d");
-  });
+  document.querySelectorAll(".tab").forEach(t =>
+    t.classList.toggle("active", t.dataset.tf === "1D"));
 
   showScreen("detail");
-  loadDetail(sym, "1d", "2m");
+  loadDetail(sym, "1D");
 
+  clearInterval(detailTimer);
   detailTimer = setInterval(() => {
-    if (currentSym === sym) loadDetail(sym, currentRange.r, currentRange.i);
+    if (currentSym === sym) loadDetail(sym, currentTf);
   }, 60000);
 }
 
@@ -496,183 +457,134 @@ function closeDetail() {
   loadListPrices();
 }
 
-async function loadDetail(sym, range, interval) {
+async function loadDetail(sym, tf) {
   document.getElementById("chartLoading").style.display = "flex";
+  document.getElementById("chartLoading").textContent = "กำลังโหลดกราฟ…";
   try {
-    let d = await fetchYahoo(sym, range, interval);
+    // โหลด quote + time_series พร้อมกัน
+    const [q, ts] = await Promise.all([
+      tdQuote(sym),
+      tdSeries(sym, tf)
+    ]);
     if (currentSym !== sym) return;
-    let r    = d.chart.result[0];
-    let meta = r.meta;
-    let q    = r.indicators.quote[0];
-    let rawTs     = r.timestamp || [];
-    let rawClose  = q.close  || [];
-    let rawVol    = q.volume || [];
 
-    // กรอง null พร้อมกันทุก array ให้ index ตรงกัน
-    const pairs = rawTs.map((t, i) => ({ t, c: rawClose[i], v: rawVol[i] }))
-                       .filter(p => p.c !== null && p.c !== undefined);
-
-    // ถ้า 1D แต่ได้ข้อมูลน้อยกว่า 10 จุด (ตลาดปิด/pre-market)
-    // → ดึง 5d interval 5m แล้วตัดแค่วันล่าสุด
-    if (range === "1d" && pairs.length < 10) {
-      const d5 = await fetchYahoo(sym, "5d", "5m").catch(() => null);
-      if (d5?.chart?.result?.[0]) {
-        const r5   = d5.chart.result[0];
-        const q5   = r5.indicators.quote[0];
-        const ts5  = r5.timestamp || [];
-        const cl5  = q5.close  || [];
-        const vl5  = q5.volume || [];
-        const allPairs = ts5.map((t,i) => ({ t, c: cl5[i], v: vl5[i] }))
-                            .filter(p => p.c !== null && p.c !== undefined);
-        if (allPairs.length >= 10) {
-          // หาวันล่าสุดที่มีข้อมูล
-          const lastTs   = allPairs.at(-1).t;
-          const lastDate = new Date(lastTs * 1000).toDateString();
-          const dayPairs = allPairs.filter(p =>
-            new Date(p.t * 1000).toDateString() === lastDate
-          );
-          if (dayPairs.length >= 5) {
-            pairs.length = 0;
-            pairs.push(...dayPairs);
-          } else {
-            // fallback ใช้ 80 จุดล่าสุด
-            pairs.length = 0;
-            pairs.push(...allPairs.slice(-80));
-          }
-        }
-      }
-    }
-
-    const ts     = pairs.map(p => p.t);
-    const closes = pairs.map(p => p.c);
-    const vols   = pairs.map(p => p.v).filter(v => v !== null && v !== undefined);
-    if (!closes.length) return;
-
-    const now  = closes.at(-1);
-    const prev = meta.previousClose || closes[0];
+    const now  = parseFloat(q.close);
+    const prev = parseFloat(q.previous_close);
+    const hi   = parseFloat(q.high);
+    const lo   = parseFloat(q.low);
+    const open = parseFloat(q.open);
     const chg  = now - prev;
-    const pct  = (chg / prev) * 100;
+    const pct  = (chg/prev)*100;
     const up   = chg >= 0;
-    const color= up ? "var(--green)" : "var(--red)";
-    const sign = up ? "+" : "";
+    const color = up ? "var(--green)" : "var(--red)";
+    const sign  = up ? "+" : "";
 
-    // price
+    // ราคา
     document.getElementById("det-price").textContent = now.toFixed(2);
     document.getElementById("det-price").style.color = color;
     const chgEl = document.getElementById("det-chg");
     chgEl.textContent = `${sign}${chg.toFixed(2)} (${sign}${pct.toFixed(2)}%)`;
     chgEl.style.color = color;
-    document.getElementById("det-baht").textContent = `≈ ${(now * usdThb).toLocaleString("th-TH",{maximumFractionDigits:0})} บาท`;
+    document.getElementById("det-baht").textContent =
+      `≈ ${(now*usdThb).toLocaleString("th-TH",{maximumFractionDigits:0})} บาท`;
 
     // market status
-    const isOpen = meta.marketState === "REGULAR";
-    document.getElementById("det-dot").className = `dot ${isOpen ? "open" : "closed"}`;
+    const isOpen = q.is_market_open;
+    document.getElementById("det-dot").className = `dot ${isOpen?"open":"closed"}`;
     document.getElementById("det-status-txt").textContent = isOpen ? "ตลาดเปิด" : "ตลาดปิด";
 
-    // day range (1D only)
-    if (range === "1d") {
-      const lo = meta.regularMarketDayLow  ?? Math.min(...closes);
-      const hi = meta.regularMarketDayHigh ?? Math.max(...closes);
-      const pct2 = hi > lo ? ((now - lo) / (hi - lo)) * 100 : 50;
+    // range bar (1D only)
+    if (tf === "1D" && hi && lo) {
+      const pct2 = hi>lo ? ((now-lo)/(hi-lo))*100 : 50;
       document.getElementById("rng-lo").textContent = lo.toFixed(2);
       document.getElementById("rng-hi").textContent = hi.toFixed(2);
-      document.getElementById("rng-fill").style.width  = pct2.toFixed(1) + "%";
-      document.getElementById("rng-fill").style.background = color;
-      document.getElementById("rng-dot").style.left   = pct2.toFixed(1) + "%";
-      document.getElementById("rng-dot").style.background = color;
+      document.getElementById("rng-fill").style.cssText = `width:${pct2.toFixed(1)}%;background:${color}`;
+      document.getElementById("rng-dot").style.cssText  = `left:${pct2.toFixed(1)}%;background:${color}`;
       document.getElementById("det-range-wrap").style.display = "block";
     } else {
       document.getElementById("det-range-wrap").style.display = "none";
     }
 
-    // chart
+    // กราฟ
+    const closes = ts.values.map(v => parseFloat(v.close));
+    const labels = ts.values.map(v => {
+      const d = new Date(v.datetime);
+      return tf==="1D"||tf==="5D"
+        ? d.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"})
+        : d.toLocaleDateString("th-TH",{month:"short",day:"numeric"});
+    });
     const canvas = document.getElementById("mainCanvas");
     document.getElementById("chartLoading").style.display = "none";
-    requestAnimationFrame(() => drawMain(canvas, closes, ts, up));
+    requestAnimationFrame(() => drawMain(canvas, closes, labels, up));
 
     // stats
-    const avgVol = vols.length ? Math.round(vols.reduce((a,b)=>a+b,0)/vols.length) : 0;
-    const hi52 = meta["52WeekHigh"]?.toFixed(2) ?? "–";
-    const lo52 = meta["52WeekLow"]?.toFixed(2)  ?? "–";
-    const mktCap = meta.marketCap
-      ? (meta.marketCap >= 1e12 ? (meta.marketCap/1e12).toFixed(2)+"T"
-        : meta.marketCap >= 1e9 ? (meta.marketCap/1e9).toFixed(2)+"B"
-        : (meta.marketCap/1e6).toFixed(0)+"M")
-      : "–";
+    const fi = q.fifty_two_week || {};
+    const vol = parseFloat(q.volume||0);
+    const mktCap = parseFloat(q.market_cap||0);
+    const fmtCap = mktCap>=1e12?(mktCap/1e12).toFixed(2)+"T"
+                  :mktCap>=1e9?(mktCap/1e9).toFixed(2)+"B"
+                  :mktCap>0?(mktCap/1e6).toFixed(0)+"M":"–";
     document.getElementById("statGrid").innerHTML = `
-      <div class="stat-box"><div class="stat-label">เปิด</div><div class="stat-val">${(meta.regularMarketOpen||0).toFixed(2)}</div></div>
+      <div class="stat-box"><div class="stat-label">เปิด</div><div class="stat-val">${open.toFixed(2)}</div></div>
       <div class="stat-box"><div class="stat-label">ปิดก่อนหน้า</div><div class="stat-val">${prev.toFixed(2)}</div></div>
-      <div class="stat-box"><div class="stat-label">52W High</div><div class="stat-val" style="color:var(--green)">${hi52}</div></div>
-      <div class="stat-box"><div class="stat-label">52W Low</div><div class="stat-val" style="color:var(--red)">${lo52}</div></div>
-      <div class="stat-box"><div class="stat-label">Mkt Cap</div><div class="stat-val">${mktCap}</div></div>
-      <div class="stat-box"><div class="stat-label">Avg Volume</div><div class="stat-val">${avgVol > 0 ? (avgVol/1e6).toFixed(1)+"M" : "–"}</div></div>`;
+      <div class="stat-box"><div class="stat-label">52W High</div><div class="stat-val" style="color:var(--green)">${fi.high||"–"}</div></div>
+      <div class="stat-box"><div class="stat-label">52W Low</div><div class="stat-val" style="color:var(--red)">${fi.low||"–"}</div></div>
+      <div class="stat-box"><div class="stat-label">Mkt Cap</div><div class="stat-val">${fmtCap}</div></div>
+      <div class="stat-box"><div class="stat-label">Volume</div><div class="stat-val">${vol>0?(vol/1e6).toFixed(1)+"M":"–"}</div></div>`;
   } catch(e) {
-    document.getElementById("chartLoading").textContent = "โหลดไม่ได้ ลองใหม่";
+    document.getElementById("chartLoading").textContent = "โหลดไม่ได้: "+e.message;
   }
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    ADD / REMOVE
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 async function addSym(raw) {
   const sym = raw.trim().toUpperCase();
   if (!sym) return "กรอก symbol ก่อน";
   if (stocks.find(s => s.sym === sym)) return `${sym} มีอยู่แล้ว`;
   document.getElementById("addError").textContent = "กำลังตรวจสอบ…";
   try {
-    const d = await fetchYahoo(sym, "1d", "5m");
-    const meta = d?.chart?.result?.[0]?.meta;
-    if (!meta) return "ไม่พบ symbol นี้";
-    const name = meta.longName || meta.shortName || sym;
+    const q = await tdQuote(sym);
+    const name = q.name || sym;
     stocks.push({ sym, name });
     await saveStocks();
     return null;
-  } catch {
-    return "ไม่พบ symbol นี้";
-  }
+  } catch(e) { return "ไม่พบ symbol: "+e.message; }
 }
 
 async function removeSym(sym) {
   stocks = stocks.filter(s => s.sym !== sym);
   delete priceCache[sym];
   await saveStocks();
-  renderList(priceCache);
+  renderList();
 }
 
-/* ══════════════════════════════════════════
-   SCREENS
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   SCREENS / EVENTS
+═══════════════════════════════════════ */
 function showScreen(name) {
-  document.getElementById("screen-list").classList.toggle("hidden", name !== "list");
-  document.getElementById("screen-detail").classList.toggle("hidden", name !== "detail");
+  document.getElementById("screen-list").classList.toggle("hidden", name!=="list");
+  document.getElementById("screen-detail").classList.toggle("hidden", name!=="detail");
 }
 
-/* ══════════════════════════════════════════
-   EVENTS
-══════════════════════════════════════════ */
-// back
 document.getElementById("backBtn").addEventListener("click", closeDetail);
 
-// tabs
 document.getElementById("timeTabs").addEventListener("click", e => {
   const tab = e.target.closest(".tab");
   if (!tab || !currentSym) return;
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   tab.classList.add("active");
-  currentRange = { r: tab.dataset.r, i: tab.dataset.i };
-  document.getElementById("chartLoading").style.display = "flex";
-  loadDetail(currentSym, currentRange.r, currentRange.i);
+  currentTf = tab.dataset.tf;
+  loadDetail(currentSym, currentTf);
 });
 
-// edit mode
 document.getElementById("editBtn").addEventListener("click", () => {
   editMode = !editMode;
   document.getElementById("editBtn").textContent = editMode ? "✅" : "✏️";
-  const list = document.getElementById("stockList");
-  list.classList.toggle("edit-mode", editMode);
+  renderList();
 });
 
-// add fab
 document.getElementById("addFab").addEventListener("click", () => {
   document.getElementById("addSheet").classList.remove("hidden");
   document.getElementById("symInput").value = "";
@@ -680,13 +592,11 @@ document.getElementById("addFab").addEventListener("click", () => {
   setTimeout(() => document.getElementById("symInput").focus(), 100);
 });
 
-// close sheet on bg click
 document.getElementById("addSheet").addEventListener("click", e => {
   if (e.target === document.getElementById("addSheet"))
     document.getElementById("addSheet").classList.add("hidden");
 });
 
-// confirm add
 document.getElementById("confirmAdd").addEventListener("click", async () => {
   const btn = document.getElementById("confirmAdd");
   btn.disabled = true; btn.textContent = "กำลังเพิ่ม…";
@@ -701,19 +611,17 @@ document.getElementById("symInput").addEventListener("keydown", e => {
   if (e.key === "Enter") document.getElementById("confirmAdd").click();
 });
 
-// resize → redraw chart
 window.addEventListener("resize", () => {
-  if (currentSym) loadDetail(currentSym, currentRange.r, currentRange.i);
+  if (currentSym) loadDetail(currentSym, currentTf);
 });
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    INIT
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 (async () => {
   await Promise.all([initDb(), getRate()]);
   if (!stocks.length) stocks = [...DEFAULT_SYMS];
   await loadListPrices();
-  // refresh list every 60s
   setInterval(loadListPrices, 60000);
 })();
 </script>
